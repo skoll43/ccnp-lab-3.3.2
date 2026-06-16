@@ -167,8 +167,7 @@ def switch_config(name, data):
     if data["trunk_to_router"]:
         lines.extend([
             f"interface {data['trunk_to_router']}",
-            " switchport trunk encapsulation dot1q",
-            " switchport mode trunk",
+                       " switchport mode trunk",
             " switchport trunk allowed vlan 21-25",
             " spanning-tree guard root",
             "!",
@@ -178,8 +177,7 @@ def switch_config(name, data):
         for member in po["members"]:
             lines.extend([
                 f"interface {member}",
-                " switchport trunk encapsulation dot1q",
-                " switchport mode trunk",
+                               " switchport mode trunk",
                 " switchport trunk allowed vlan 21-25",
                 f" channel-group {po_id} mode {po['mode']}",
                 " spanning-tree guard root",
@@ -187,8 +185,7 @@ def switch_config(name, data):
             ])
         lines.extend([
             f"interface Port-channel {po_id}",
-            " switchport trunk encapsulation dot1q",
-            " switchport mode trunk",
+                       " switchport mode trunk",
             " switchport trunk allowed vlan 21-25",
             "!",
         ])
