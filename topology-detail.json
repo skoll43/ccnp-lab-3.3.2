@@ -1,0 +1,63 @@
+{
+  "source": "assets/image2.png",
+  "lab": "3.3.2 Implementación de Seguridad sobre Túneles",
+  "devices": [
+    {"name": "BR", "role": "Router frontera BGP AS 300", "as": 300, "loopback_v4": "192.168.100.1/32", "loopback_v6": "3001:ABCD:ABCD:100::1/128"},
+    {"name": "ISP", "role": "Router proveedor BGP AS 200", "as": 200, "loopback_v4": "8.8.8.8/32", "loopback_v6": "3001:ABCD:ABCD:8:8::/128"},
+    {"name": "R1", "role": "Router frontera + DHCP server + iBGP + OSPF ABR", "as": 100, "loopback_v4": null, "loopback_v6": null},
+    {"name": "R2", "role": "Router OSPF ABR + VPN peer + iBGP", "as": 100, "loopback_v4": "2.2.2.2/32", "loopback_v6": null},
+    {"name": "R3", "role": "Router OSPF ABR + VPN peer + iBGP", "as": 100, "loopback_v4": "3.3.3.3/32", "loopback_v6": null},
+    {"name": "SWA", "role": "Switch distribución", "as": null, "management_last_octet": 7},
+    {"name": "SWB", "role": "Switch distribución", "as": null, "management_last_octet": 21},
+    {"name": "SWC", "role": "Switch acceso", "as": null, "management_last_octet": 14},
+    {"name": "SWD", "role": "Switch acceso", "as": null, "management_last_octet": 28}
+  ],
+  "links": [
+    {"a": "BR", "a_intf": "E0/2", "b": "ISP", "b_intf": "E0/2", "protocol": "eBGP", "v4_subnet": "220.50.0.0/30", "v6_subnet": "3001:ABCD:ABCD:220::/112", "notes": "BR .1, ISP .2"},
+    {"a": "ISP", "a_intf": "E0/3", "b": "R1", "b_intf": "E0/3", "protocol": "eBGP", "v4_subnet": null, "v6_subnet": null, "notes": "R1 .1, ISP .2 (subred no visible)"},
+    {"a": "R1", "a_intf": "E0/1", "b": "R2", "b_intf": "E0/1", "protocol": "OSPF Area 0", "v4_subnet": "192.168.12.0/24", "v6_subnet": "3001:ABCD:ABCD:12::/64", "notes": "R1 .1, R2 .2"},
+    {"a": "R1", "a_intf": "E0/2", "b": "R3", "b_intf": "E0/2", "protocol": "OSPF Area 0", "v4_subnet": "192.168.13.0/24", "v6_subnet": "3001:ABCD:ABCD:13::/64", "notes": "R1 .1, R3 .3"},
+    {"a": "R2", "a_intf": "E0/3", "b": "SWA", "b_intf": "E0/3", "protocol": "L3/trunk", "v4_subnet": null, "v6_subnet": null, "notes": "subred no visible"},
+    {"a": "R3", "a_intf": "E0/3", "b": "SWB", "b_intf": "E0/3", "protocol": "L3/trunk", "v4_subnet": null, "v6_subnet": null, "notes": "subred no visible"}
+  ],
+  "etherchannels": [
+    {"name": "Po1", "mode": "PAgP", "members_a": ["SWC E1/0", "SWC E1/1"], "members_b": ["SWD E1/0", "SWD E1/1"]},
+    {"name": "Po2", "mode": "LACP", "members_a": ["SWB E0/0", "SWB E0/1"], "members_b": ["SWC E0/0", "SWC E0/1"]},
+    {"name": "Po3", "mode": "Static", "members_a": ["SWB E1/2", "SWB E1/3"], "members_b": ["SWD E1/2", "SWD E1/3"]},
+    {"name": "Po4", "mode": "PAgP", "members_a": ["SWA E0/0", "SWA E0/1"], "members_b": ["SWD E0/0", "SWD E0/1"]},
+    {"name": "Po5", "mode": "Static", "members_a": ["SWA E1/2", "SWA E1/3"], "members_b": ["SWC E1/2", "SWC E1/3"]},
+    {"name": "Po6", "mode": "LACP", "members_a": ["SWA E1/0", "SWA E1/1"], "members_b": ["SWB E1/0", "SWB E1/1"]}
+  ],
+  "vlans": [
+    {"id": 21, "name": "FINANZAS", "v4": "10.0.21.0/24", "v6": "3001:ABCD:ABCD:A::/64", "gateway_v4": "10.0.21.254", "gateway_v6": "3001:ABCD:ABCD:A::FF", "access_switch_ports": ["SWC E0/2"]},
+    {"id": 22, "name": "GESTIÓN", "v4": "10.0.31.0/24", "v6": "3001:ABCD:ABCD:B::/64", "gateway_v4": "10.0.31.254", "gateway_v6": "3001:ABCD:ABCD:B::FF", "access_switch_ports": ["SWC E0/3"]},
+    {"id": 23, "name": "FUERZA-VENTAS", "v4": "10.0.41.0/24", "v6": "3001:ABCD:ABCD:C::/64", "gateway_v4": "10.0.41.254", "gateway_v6": "3001:ABCD:ABCD:C::FF", "access_switch_ports": ["SWD E0/2"]},
+    {"id": 24, "name": "RRHH", "v4": "10.0.51.0/24", "v6": "3001:ABCD:ABCD:D::/64", "gateway_v4": "10.0.51.254", "gateway_v6": "3001:ABCD:ABCD:D::FF", "access_switch_ports": ["SWD E0/3"]},
+    {"id": 25, "name": "ADM", "v4": "10.0.61.0/24", "v6": "3001:ABCD:ABCD:E::/64", "gateway_v4": "10.0.61.254", "gateway_v6": "3001:ABCD:ABCD:E::FF", "access_switch_ports": []}
+  ],
+  "protocols": [
+    {"name": "eBGP", "scope": "BR (300) ↔ ISP (200)", "details": "IPv4/IPv6"},
+    {"name": "eBGP", "scope": "ISP (200) ↔ R1 (100)", "details": "IPv4/IPv6; subred no visible"},
+    {"name": "iBGP / MP-BGP", "scope": "R1, R2, R3 (AS 100)", "details": "Loopbacks como prefijos; redistribución IGP↔EGP"},
+    {"name": "OSPF", "scope": "R1, R2, R3", "details": "Área 0 (R1-R2, R1-R3)"},
+    {"name": "OSPF", "scope": "R2, R3", "details": "Área 100 (R2-R3); sumarizar al área 0"},
+    {"name": "VPN Site-to-Site", "scope": "R2 ↔ R3", "details": "Túnel sobre backbone capa 2; parámetros a elección"},
+    {"name": "Inter-VLAN routing", "scope": "R2 y R3", "details": "Default-gateway última IP (IPv4) y ::FF (IPv6)"},
+    {"name": "FHRP", "scope": "R2 y R3", "details": "VLAN21/22 prefieren R2; VLAN23/24 prefieren R3"},
+    {"name": "DHCPv4/DHCPv6", "scope": "R1", "details": "Servidor DHCP para PCs"},
+    {"name": "Rapid PVST+", "scope": "SWA, SWB, SWC, SWD", "details": "Spanning-Tree"},
+    {"name": "Port-security", "scope": "SWC, SWD", "details": "Máx 2 MACs; err-disable"},
+    {"name": "STP stability", "scope": "Interfaces apropiadas", "details": "Root guard / BPDU guard / loop guard"},
+    {"name": "PACL", "scope": "Switches capa 2", "details": "VLAN21 no se comunica con VLAN22"},
+    {"name": "VACL", "scope": "Switches capa 2", "details": "VLAN23 no se comunica con VLAN24"}
+  ],
+  "unknowns": [
+    "Subred ISP ↔ R1 no etiquetada; solo host labels .1 (R1) y .2 (ISP).",
+    "Loopback de R1 no visible.",
+    "IPv6 de loopbacks R2 y R3 no visibles.",
+    "Direccionamiento exacto de enlaces R2↔SWA y R3↔SWB no visible.",
+    "Mecanismo FHRP exacto no especificado.",
+    "Tipo de túnel Site-to-Site a elección.",
+    "Route-maps BGP: path debe mostrar 2×AS200 en IPv4 y 3×AS200 en IPv6."
+  ]
+}

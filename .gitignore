@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Logs de sesiones Telnet/SSH
+*.log
+
+# Entornos y credenciales
+.env
+.env.*
+*.pem
+*.key
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos comprimidos temporales
+*.gz
+*.tar
+*.zip
+
+# Documento fuente original (opcional; descomentar si no se quiere subir)
+# *.docx

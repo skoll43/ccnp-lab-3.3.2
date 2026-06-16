@@ -1,0 +1,24 @@
+{
+  "source": "3.3.2 Actividad Implementación de Seguridad sobre Tuneles.docx",
+  "images": [
+    {
+      "file": "image1.gif",
+      "bytes": 663
+    },
+    {
+      "file": "image4.jpeg",
+      "bytes": 44732
+    },
+    {
+      "file": "image2.png",
+      "bytes": 310595
+    },
+    {
+      "file": "image3.png",
+      "bytes": 20627
+    }
+  ],
+  "image_refs_in_text": [
+    "image2.png"
+  ]
+}
